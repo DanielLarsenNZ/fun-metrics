@@ -3,6 +3,8 @@
 Prototypes and examples of Azure Functions for recording metrics. For example, how many times a file
 is downloaded.
 
+> Work in Progress! 👷‍
+
 ## Links and references
 
 Monitor Azure Functions <https://docs.microsoft.com/en-us/azure/azure-functions/functions-monitoring>
