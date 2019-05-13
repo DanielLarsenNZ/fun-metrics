@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunMetrics", "FunMetrics\FunMetrics.csproj", "{DC389F1F-AE4B-4702-AF23-A8D6E4CBB06A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunMetrics.Tests", "FunMetrics.Test\FunMetrics.Tests.csproj", "{14DA15F9-5D7D-43D8-9CBB-9EF64F37C640}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC389F1F-AE4B-4702-AF23-A8D6E4CBB06A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC389F1F-AE4B-4702-AF23-A8D6E4CBB06A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC389F1F-AE4B-4702-AF23-A8D6E4CBB06A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC389F1F-AE4B-4702-AF23-A8D6E4CBB06A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14DA15F9-5D7D-43D8-9CBB-9EF64F37C640}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14DA15F9-5D7D-43D8-9CBB-9EF64F37C640}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14DA15F9-5D7D-43D8-9CBB-9EF64F37C640}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14DA15F9-5D7D-43D8-9CBB-9EF64F37C640}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D44DD8A8-462A-4A0A-97E5-E63B54E2BD24}
+	EndGlobalSection
+EndGlobal
