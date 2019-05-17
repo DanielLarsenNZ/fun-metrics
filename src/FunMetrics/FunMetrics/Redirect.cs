@@ -1,20 +1,15 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
+using FunMetrics.Helpers;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
-using System.Linq;
-using FunMetrics.Helpers;
-using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
-using System.Net;
 
 namespace FunMetrics
 {
@@ -54,15 +49,36 @@ namespace FunMetrics
 
                 // Track Event
 
-                // Track multiple events: file name, relative path, 
-                // https://azurelunchnz.azureedge.net/podcasts/s2e01_960.jpg
-                // /podcasts/s2e01_960.jpg
-                // s2e01_960.jpg
-                // add query string params (of url) as properties, so 
+                var uri = new Uri(url);
+                string urlNoQuery = url.Split('?')[0];
+
+                var properties = new Dictionary<string, string> {
+                        { "Url", url },
+                        { "Uri.AbsolutePath", uri.AbsolutePath },
+                        { "Uri.UrlNoQuery", urlNoQuery},
+                        { "Referer", req.Headers["Referer"] }
+                    };
+
+                var queries = uri.Query.Substring(1).Split('&');
+
+                foreach (var query in queries)
+                {
+                    if (string.IsNullOrEmpty(query)) continue;
+                    var parts = query.Split('=');
+                    properties.TryAdd($"Url.Query.{parts[0]}", parts.Length > 1 ? parts[1] : null);
+                }
 
                 _telemetryClient.TrackEvent(
                     "FunMetrics.Redirect",
-                    properties: new Dictionary<string, string> { { "Url", url } });
+                    properties: properties);
+
+                _telemetryClient.TrackEvent(
+                    urlNoQuery,
+                    properties: properties);
+
+                _telemetryClient.TrackEvent(
+                    uri.AbsolutePath,
+                    properties: properties);
 
                 operation.Telemetry.ResponseCode = "302";
 
