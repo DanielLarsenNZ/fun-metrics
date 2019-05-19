@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunMetrics", "FunMetrics\FunMetrics.csproj", "{DC389F1F-AE4B-4702-AF23-A8D6E4CBB06A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunMetrics", "FunMetrics\FunMetrics.csproj", "{DC389F1F-AE4B-4702-AF23-A8D6E4CBB06A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunMetrics.Tests", "FunMetrics.Test\FunMetrics.Tests.csproj", "{14DA15F9-5D7D-43D8-9CBB-9EF64F37C640}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunMetrics.Tests", "FunMetrics.Test\FunMetrics.Tests.csproj", "{14DA15F9-5D7D-43D8-9CBB-9EF64F37C640}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -12,3 +12,9 @@ Monitor Azure Functions <https://docs.microsoft.com/en-us/azure/azure-functions/
 Application Insights API for custom events and metrics <https://docs.microsoft.com/en-us/azure/azure-monitor/app/api-custom-events-metrics>
 
 Track custom operations with Application Insights .NET SDK <https://docs.microsoft.com/en-us/azure/azure-monitor/app/custom-operations-tracking>
+
+### Counting Blob downloads
+
+<https://github.com/djhmateer/AzureFunctionBlobDownloadCount/blob/master/davemtest/ProcessLogs.cs>
+
+Enabling (classic) storage account logging <https://docs.microsoft.com/en-us/rest/api/storageservices/enabling-storage-logging-and-accessing-log-data#HowtoenableStorageLoggingusingtheWindowsAzureManagementPortal>
