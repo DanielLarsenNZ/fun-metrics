@@ -32,58 +32,21 @@ namespace FunMetrics
             ILogger log,
             ExecutionContext context)
         {
-            _config = GetConfig(context);
+            _config = FunctionsHelper.GetConfig(context);
             _log = log;
 
             string url = req.Query["url"];
 
-            using (var operation = _telemetryClient.StartOperation<RequestTelemetry>($"GET {url}"))
+            if (!IsWhitelisted(url))
             {
-                if (!IsWhitelisted(url))
-                {
-                    operation.Telemetry.ResponseCode = "404";
-                    return new NotFoundResult();
-                }
-
-                log.LogInformation($"Redirect: 302 {url}");
-
-                // Track Event
-
-                var uri = new Uri(url);
-                string urlNoQuery = url.Split('?')[0];
-
-                var properties = new Dictionary<string, string> {
-                        { "Url", url },
-                        { "Uri.AbsolutePath", uri.AbsolutePath },
-                        { "Uri.UrlNoQuery", urlNoQuery},
-                        { "Referer", req.Headers["Referer"] }
-                    };
-
-                var queries = uri.Query.Substring(1).Split('&');
-
-                foreach (var query in queries)
-                {
-                    if (string.IsNullOrEmpty(query)) continue;
-                    var parts = query.Split('=');
-                    properties.TryAdd($"Url.Query.{parts[0]}", parts.Length > 1 ? parts[1] : null);
-                }
-
-                _telemetryClient.TrackEvent(
-                    "FunMetrics.Redirect",
-                    properties: properties);
-
-                _telemetryClient.TrackEvent(
-                    urlNoQuery,
-                    properties: properties);
-
-                _telemetryClient.TrackEvent(
-                    uri.AbsolutePath,
-                    properties: properties);
-
-                operation.Telemetry.ResponseCode = "302";
-
-                return new RedirectResult(url, false);
+                return new NotFoundResult();
             }
+
+            log.LogInformation($"Redirect: 302 {url}");
+
+            InsightsHelper.TrackEvents(_telemetryClient, "FunMetrics.Redirect", url, req);
+
+            return new RedirectResult(url, false);
         }
 
         private static bool IsWhitelisted(string url)
@@ -95,19 +58,5 @@ namespace FunMetrics
 
             return RedirectHelper.IsWhitelisted(url, _config["WhitelistedUrlsStartsWith"]);
         }
-
-        private static IConfiguration GetConfig(ExecutionContext context)
-        {
-            var config = new ConfigurationBuilder()
-#if DEBUG
-               .SetBasePath(context.FunctionAppDirectory)
-               .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
-#endif
-               .AddEnvironmentVariables()
-               .Build();
-
-            return config;
-        }
-
     }
 }
