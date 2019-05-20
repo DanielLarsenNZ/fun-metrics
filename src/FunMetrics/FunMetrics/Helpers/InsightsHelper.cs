@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace FunMetrics.Helpers
 {
@@ -13,12 +13,14 @@ namespace FunMetrics.Helpers
             var uri = new Uri(url);
             string urlNoQuery = url.Split('?')[0];
 
-            var properties = new Dictionary<string, string> {
-                    { "Url", url },
-                    { "Uri.AbsolutePath", uri.AbsolutePath },
-                    { "Uri.UrlNoQuery", urlNoQuery},
-                    { "Referer", req.Headers["Referer"] }
-                };
+            var properties = new Dictionary<string, string>
+            {
+                { "Url", url },
+                { "Uri.AbsolutePath", uri.AbsolutePath },
+                { "Uri.UrlNoQuery", urlNoQuery},
+                { "Referer", req.Headers["Referer"] },
+                { "User-Agent", req.Headers["User-Agent"] }
+            };
 
             if (!string.IsNullOrWhiteSpace(uri.Query))
             {
@@ -33,17 +35,67 @@ namespace FunMetrics.Helpers
                 }
             }
 
-            client.TrackEvent(
-                eventName,
-                properties: properties);
+            foreach (var header in req.Headers)
+            {
+                // don't track these headers
+                if (new[] 
+                {
+                    "Accept-Encoding",
+                    "Connection",
+                    "Accept",
+                    "Cache-Control",
+                    "Range",
+                    "Referer",
+                    "User-Agent",
+                    "Cookie",
+                    "Upgrade-Insecure-Requests"
+                }.Contains(header.Key)) continue;
+
+                properties.TryAdd($"Request.Header.{header.Key}", header.Value);
+            }
+
+            client.Context.User.Id = GetTrackingId(req);
+            client.Context.Session.Id = GetSessionId(req);
 
             client.TrackEvent(
-                urlNoQuery,
+                $"{eventName} {uri.AbsolutePath}",
                 properties: properties);
 
-            client.TrackEvent(
-                uri.AbsolutePath,
-                properties: properties);
+            //client.TrackEvent(
+            //    urlNoQuery,
+            //    properties: properties);
+
+            //client.TrackEvent(
+            //    uri.AbsolutePath,
+            //    properties: properties);
+        }
+
+        private static string GetTrackingId(HttpRequest req)
+        {
+            const string TrackingIdCookieName = "trackingid";
+            string id = req.Cookies[TrackingIdCookieName];
+            if (string.IsNullOrEmpty(id))
+            {
+                id = Guid.NewGuid().ToString("N");
+                req.HttpContext.Response.Cookies.Append(TrackingIdCookieName, id,
+                    new CookieOptions { Expires = DateTime.Now.AddYears(1), SameSite = SameSiteMode.None });
+            }
+
+            return id;
+        }
+
+        private static string GetSessionId(HttpRequest req)
+        {
+            const string SessionIdCookieName = "sessionid";
+            string id = req.Cookies[SessionIdCookieName];
+            if (string.IsNullOrEmpty(id))
+            {
+                id = Guid.NewGuid().ToString("N");
+                req.HttpContext.Response.Cookies.Append(SessionIdCookieName, id,
+                    new CookieOptions { SameSite = SameSiteMode.None });
+            }
+
+            return id;
         }
     }
 }

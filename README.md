@@ -5,6 +5,11 @@ is downloaded.
 
 > Work in Progress! 👷‍
 
+## TODO
+
+1. ✅ ~~Tracking cookie~~
+1. Short-circuit if-modified-since
+
 ## Links and references
 
 Monitor Azure Functions <https://docs.microsoft.com/en-us/azure/azure-functions/functions-monitoring>
