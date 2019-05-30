@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json.schemastore.org/proxies",
+    "proxies": {
+        "episodes": {
+            "matchCondition": {
+                "methods": [ "GET", "HEAD" ],
+                "route": "/episodes/{file}"
+            },
+            "backendUri": "https://funmetrics.azurewebsites.net/api/blob?path=podcasts/{file}",
+            "debug": false
+        }
+    }
+}
