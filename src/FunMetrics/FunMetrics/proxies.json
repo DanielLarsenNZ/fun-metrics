@@ -8,6 +8,14 @@
             },
             "backendUri": "https://funmetrics.azurewebsites.net/api/blob?path=podcasts/{file}",
             "debug": false
+        },
+        "assets": {
+            "matchCondition": {
+                "methods": [ "GET" ],
+                "route": "/assets/{file}"
+            },
+            "backendUri": "https://funmetrics.azurewebsites.net/api/redirect?url=https://azurelunchnz.azureedge.net/podcasts/{file}",
+            "debug": false
         }
     }
 }
