@@ -88,8 +88,52 @@ namespace FunMetrics
             // GET - get blob and stream to client
             InsightsHelper.TrackEvents(_telemetryClient, "FunMetrics.Blob", uri.ToString(), req);
 
-            var stream = new MemoryStream();
-            await blob.DownloadToStreamAsync(stream);
+            Stream stream = null;
+
+            // try local cache
+            string filePath = $"D:\\Local\\{path.Replace("/", "__")}";
+            if (File.Exists(filePath))
+            {
+                // retry three times
+                for (int i = 0; i < 3; i++)
+                {
+                    // get from local cache
+                    try
+                    {
+                        stream = new FileStream(filePath, FileMode.Open);
+                        log.LogInformation($"FunMetrics.Blob.Run: Cache HIT {filePath}");
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        log.LogError(ex, $"Could not open file \"{filePath}\" on attempt {i + 1}.");
+                        await Task.Delay(10);
+                    }
+                }
+            }
+
+            if (stream == null)
+            {
+                // get from Blob
+                log.LogInformation($"FunMetrics.Blob.Run: Cache MISS {filePath}");
+                stream = new MemoryStream();
+                await blob.DownloadToStreamAsync(stream);
+                
+                // save to cache
+                try
+                {
+                    using (var fileStream = new FileStream(filePath, FileMode.CreateNew, FileAccess.Write))
+                    {
+                        stream.Seek(0, SeekOrigin.Begin);
+                        stream.CopyTo(fileStream);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.LogError(ex, $"Could not cache file \"{filePath}\".");
+                }
+            }
+
             stream.Seek(0, SeekOrigin.Begin);
 
             return new FileStreamResult(stream, blob.Properties.ContentType)

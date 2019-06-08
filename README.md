@@ -9,6 +9,8 @@ is downloaded.
 
 1. ✅ ~~Tracking cookie~~
 1. Short-circuit if-modified-since
+1. Add ETag to cached file name
+1. Cache content type, etag, lastmodified to save a metadata call to Blob service
 
 ## Links and references
 
