@@ -1,21 +1,21 @@
 {
     "$schema": "http://json.schemastore.org/proxies",
     "proxies": {
-        "episodes": {
-            "matchCondition": {
-                "methods": [ "GET", "HEAD" ],
-                "route": "/episodes/{file}"
-            },
-            "backendUri": "https://funmetrics.azurewebsites.net/api/blob?path=podcasts/{file}",
-            "debug": false
+      "episodes": {
+        "matchCondition": {
+          "methods": [ "GET", "HEAD" ],
+          "route": "/episodes/{file}"
         },
-        "assets": {
-            "matchCondition": {
-                "methods": [ "GET" ],
-                "route": "/assets/{file}"
-            },
-            "backendUri": "https://funmetrics.azurewebsites.net/api/redirect?url=https://azurelunchnz.azureedge.net/podcasts/{file}",
-            "debug": false
-        }
+        "backendUri": "https://localhost/api/blob?path=podcasts/{file}",
+        "debug": false
+      },
+      "assets": {
+        "matchCondition": {
+          "methods": [ "GET" ],
+          "route": "/assets/{file}"
+        },
+        "backendUri": "https://localhost/api/redirect?url=https://azurelunchnz.azureedge.net/podcasts/{file}",
+        "debug": false
+      }
     }
 }
